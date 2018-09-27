@@ -1,0 +1,57 @@
+<?php
+
+/**
+ * @file
+ * Contains plupload_javascript_token.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity;
+
+/**
+ * Implements hook_help().
+ */
+function plupload_javascript_token_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the tokenuuid module.
+    case 'help.page.plupload_javascript_token':
+      $output = '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The Token generated in our modified Plupload Widget as Drupal Token.') . '</p>';
+      $output .= '<ul>';
+      $output .= '<li>[plupload_javascript:token]</li>';
+      $output .= '</ul>';
+      return $output;
+    default:
+  }
+}
+
+/**
+ * Implements hook_token_info().
+ */
+function plupload_javascript_token_token_info() {
+  $info = [];
+  $info['types']['plupload_javascript'] = ['name' => t('Plupload Javascript Token'), 'description' => t('The Token generated in our modified Plupload Widget as Drupal Token')];
+  $info['tokens']['plupload_javascript']['token'][] = '';
+  return $info;
+}
+
+/**
+ * Implements hook_tokens().
+ */
+function  plupload_javascript_token_tokens($type, $tokens, array $data, array $options, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
+  $replacements = [];
+  if ($type == 'plupload_javascript') {
+
+    foreach ($tokens as $name => $original) {
+      switch ($name) {
+        case 'token':
+          // Get the Token from the same Cookie as Plupload
+          $replacements[$original] = json_decode($_COOKIE['UploadToken']);
+          break;
+      }
+    }
+  }
+  return $replacements;
+}
+
+

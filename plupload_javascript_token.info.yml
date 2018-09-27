@@ -1,0 +1,6 @@
+name: PlUpload JavaScript Token
+type: module
+description: Make the Token generated in our modified Plupload JavaScript available as a Drupal Token
+core: 8.x
+dependencies:
+  - token
